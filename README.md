@@ -95,7 +95,9 @@ Maven project as a start point). For the same restrictions, your code must be Ja
 How to submit a solution
 =============================
 
-By now you should have read access to this repository. Assignment should be completed in your own private fork in separate branch.
+By now you should have read access to this repository. This allows you to fork this repository. Please use your forked repository to complete the assignment, creating a separate branch.
+
+*Note: We would like to keep our code assignment project private. This should not be a problem and it does not require any extra effort from you. All repositories forked from an already private repository are kept private too. So the only thing we ask you is not to republish it under a private repo.*
 
 Once everything is done and you are happy with results, please create a new pull request from your branch into master branch of *your private fork*. Please do not use original Friendsurance/batch repository as target for pull request.
 
