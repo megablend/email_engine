@@ -1,6 +1,7 @@
 Friendsurance code assignment
 =============================
 
+- [LICENSE](#license)
 - [Introduction](#introduction)
 - [Batch Mails Processing Engine](#batch-mails-processing-engine)
   - [Context](#context)
@@ -8,6 +9,14 @@ Friendsurance code assignment
   - [Acceptance Criteria](#acceptance-criteria)
   - [Notes from IT](#notes-from-it)
 - [How to submit a solution](#how-to-submit-a-solution)
+
+LICENSE
+=============================
+
+Copyright (C) Alecto GmbH - All Rights Reserved
+
+Unauthorized copying of any content of this project via any medium is strictly prohibited.
+Proprietary and confidential.
 
 Introduction
 =============================
@@ -86,9 +95,9 @@ Maven project as a start point). For the same restrictions, your code must be Ja
 How to submit a solution
 =============================
 
-By now you should have read access to this repository. Assignment should be completed in your own private fork in separate branch. 
+By now you should have read access to this repository. Assignment should be completed in your own private fork in separate branch.
 
-Once everything is done and you are happy with results, please create a new pull request from your branch into master branch of *your private fork*. Please do not use original Friendsurance/batch repository as target for pull request. 
+Once everything is done and you are happy with results, please create a new pull request from your branch into master branch of *your private fork*. Please do not use original Friendsurance/batch repository as target for pull request.
 
 When pull request is ready, please, assign it to a person, who granted you access to Friendsurance/batch repository. Or simply send us an email with link to pull request.
 <br><br><br>
