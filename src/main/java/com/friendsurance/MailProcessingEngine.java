@@ -51,8 +51,15 @@ public class MailProcessingEngine {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                ItemProcessingImpl itemProcessing = new ItemProcessingImpl(new FileReader(), new SendMail());
-                itemProcessing.doProcessing();
+                Calendar cal = Calendar.getInstance();
+                int hourOfTheDay = cal.get(Calendar.HOUR_OF_DAY);//get the hour number of the day, from 0 to 23
+                int minuteOfTheDay = cal.get(Calendar.MINUTE);
+                int secondOfTheDay = cal.get(Calendar.SECOND);
+                
+                if (hourOfTheDay == hour && minuteOfTheDay == minute && secondOfTheDay == second) {
+                    ItemProcessingImpl itemProcessing = new ItemProcessingImpl(new FileReader(), new SendMail());
+                    itemProcessing.doProcessing();
+                }
             }
         };
         Calendar today = Calendar.getInstance();
