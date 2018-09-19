@@ -39,14 +39,23 @@ public class EmailConfigTest {
      * Configuration Properties
      * @return 
      */
-    private Properties getProperties() {
+    private Properties getProperties(boolean valid) {
         Properties prop = new Properties();
-        prop.put("mail.smtp.auth", true);
-        prop.put("mail.smtp.starttls.enable", AppUtil.getProperties().getProperty("email_tls"));
-        prop.put("mail.smtp.host", AppUtil.getProperties().getProperty("email_host"));
-        prop.put("mail.smtp.port", AppUtil.getProperties().getProperty("email_port"));
-        prop.put("mail.smtp.ssl.enable", false);
-        prop.put("mail.debug", true);
+        if (valid) {
+            prop.put("mail.smtp.auth", true);
+            prop.put("mail.smtp.starttls.enable", AppUtil.getProperties().getProperty("email_tls"));
+            prop.put("mail.smtp.host", AppUtil.getProperties().getProperty("email_host"));
+            prop.put("mail.smtp.port", AppUtil.getProperties().getProperty("email_port"));
+            prop.put("mail.smtp.ssl.enable", false);
+            prop.put("mail.debug", true);
+        } else {
+            prop.put("mail.smtp.auth", true);
+            prop.put("mail.smtp.starttls.enable", AppUtil.getProperties().getProperty("email_tls"));
+            prop.put("mail.smtp.host", "charles.the.man");
+            prop.put("mail.smtp.port", "who.knows");
+            prop.put("mail.smtp.ssl.enable", false);
+            prop.put("mail.debug", true);
+        }
         return prop;
     }
     
@@ -54,14 +63,32 @@ public class EmailConfigTest {
      * Setting up of the email session
      * @return 
      */
-    private Session getSession() {
-        Session session = Session.getInstance(getProperties(), new Authenticator() {
+    private Session getSession(boolean valid) {
+        Session session = Session.getInstance(getProperties(valid), new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(AppUtil.getProperties().getProperty("username"), AppUtil.getProperties().getProperty("password"));
             }
         });
         return session;
+    }
+    
+    @Test(expected = MessagingException.class)
+    public void whenWrongCredentials_throwException() throws Exception {
+        Message message = new MimeMessage(getSession(false));
+        message.setFrom(new InternetAddress((String) AppUtil.getProperties().get("email_from")));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+        message.setSubject((String) AppUtil.getProperties().get("email_subject"));
+
+        MimeBodyPart mimeBodyPart = new MimeBodyPart();
+        mimeBodyPart.setContent("zzz", "text/html");
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(mimeBodyPart);
+
+        message.setContent(multipart);
+
+        Transport.send(message);
     }
     
     /**
@@ -73,7 +100,7 @@ public class EmailConfigTest {
         String msgBody = AppUtil.emailBody(MailType.MAIL_TYPE_1);
         String msgAfterProcessing = null;
         try {
-            Message message = new MimeMessage(getSession());
+            Message message = new MimeMessage(getSession(true));
             message.setFrom(new InternetAddress((String) AppUtil.getProperties().get("email_from")));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
             message.setSubject((String) AppUtil.getProperties().get("email_subject"));
