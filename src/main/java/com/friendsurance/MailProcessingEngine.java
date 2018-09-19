@@ -31,7 +31,7 @@ public class MailProcessingEngine {
      */
     public static void main(String[] args) {
         MailProcessingEngine mailEngine = new MailProcessingEngine();
-        LOG.info("Mail Processing Engine Started Successfully -- Let us catch the real action at " + AppUtil.getProperties().getProperty("email_processing_hour") + " today :)");
+        LOG.info("Mail Processing Engine Started Successfully -- Let us catch the real action at " + AppUtil.getProperties().getProperty("email_processing_hour") + ":" + AppUtil.getProperties().getProperty("email_processing_minute") + ":" + AppUtil.getProperties().getProperty("email_processing_second") + " today :)");
         try {
             mailEngine.scheduler();
         } catch (InterruptedException e) {
