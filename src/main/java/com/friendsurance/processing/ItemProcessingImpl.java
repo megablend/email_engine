@@ -13,12 +13,15 @@ import com.friendsurance.mail.EmailRecipientImpl;
 import com.friendsurance.mail.EmailService.MailType;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author Nexus Axis
  */
 public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailRecipientImpl, MailType>> {
+    
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     
     public ItemProcessingImpl(FileReader reader, ItemWriter<Map<EmailRecipientImpl, MailType>> writer) {
         super(reader, writer);
@@ -32,6 +35,16 @@ public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailReci
     @Override
     protected Map<EmailRecipientImpl, MailType> process(List<User> users) {
         return null;
+    }
+    
+    /**
+     * Get the mail type priority
+     * @param mailType
+     * @return 
+     */
+    private int getPrioityNumber(MailType mailType) {
+        String[] splitPriorityNumber = mailType.toString().split("_");
+        return Integer.valueOf(splitPriorityNumber[2]);
     }
     
 }
