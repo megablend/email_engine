@@ -29,6 +29,7 @@ public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailReci
     
     public ItemProcessingImpl(FileReader reader, ItemWriter<Map<EmailRecipientImpl, MailType>> writer) {
         super(reader, writer);
+        this.counter = new AtomicInteger();
     }
 
     /**
