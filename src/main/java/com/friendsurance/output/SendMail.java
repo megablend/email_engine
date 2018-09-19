@@ -32,9 +32,15 @@ public class SendMail implements ItemWriter<Map<EmailRecipientImpl, MailType>> {
         if (!users.isEmpty()) {
             for (final Map.Entry<EmailRecipientImpl, MailType> user: users.entrySet()) {
                 if (null == sentMails.get(user.getKey().getEmail())) {
-                    EmailConfig ec = new EmailConfig();
-                    ec.sendMail(user.getKey(), user.getValue());
-                    sentMails.put(user.getKey().getEmail(), 1);
+                    Runnable r = new Runnable() {
+                        @Override
+                        public void run() {
+                            EmailConfig ec = new EmailConfig();
+                            ec.sendMail(user.getKey(), user.getValue());
+                            sentMails.put(user.getKey().getEmail(), 1);
+                        }
+                    };
+                    ThreadService.newProcess().execute(r); // this initiates a new process for sending mails
                 }
             }
             LOG.info("Mailing Processing Engine completed successfully");
