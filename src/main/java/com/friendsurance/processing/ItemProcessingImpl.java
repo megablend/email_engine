@@ -11,6 +11,8 @@ import com.friendsurance.backend.User;
 import com.friendsurance.input.FileReader;
 import com.friendsurance.mail.EmailRecipientImpl;
 import com.friendsurance.mail.EmailService.MailType;
+import com.friendsurance.utils.AppUtil;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -34,7 +36,21 @@ public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailReci
      */
     @Override
     protected Map<EmailRecipientImpl, MailType> process(List<User> users) {
-        return null;
+        Map<EmailRecipientImpl, MailType> emails = new HashMap<>();
+        for (User user : users) {
+            if (EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
+                int priorityNumber = getPrioityNumber(AppUtil.getMailType(user));
+                EmailRecipientImpl emailRecipientImpl = new EmailRecipientImpl(user.getEmail());
+                if (null == emails.get(emailRecipientImpl)) 
+                    emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                else {
+                    int currentPriorityNumber = getPrioityNumber(emails.get(emailRecipientImpl));
+                    if (priorityNumber > currentPriorityNumber)
+                        emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                }
+            }
+        }
+        return emails;
     }
     
     /**
