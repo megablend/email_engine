@@ -5,7 +5,14 @@
  */
 package com.friendsurance.processing;
 
+import com.friendsurance.backend.User;
+import com.friendsurance.mail.EmailRecipientImpl;
 import com.friendsurance.mail.EmailService;
+import com.friendsurance.utils.AppUtil;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -41,6 +48,29 @@ public class ItemProcessingTest {
     @Test
     public void whenValidEmail_thenReturnFalse() throws Exception {
         assertTrue(EMAIL_PATTERN.matcher(validEmail).matches());
+    }
+    
+    @Test
+    public void whenProcess_thenReturnUserDetails() throws Exception {
+        List<User> users = new ArrayList<>();
+        users.add(new User("mega@gmail.com", false, 0, 0));
+        users.add(new User("friendsurance@gmail.com", false, 2, 0));
+        Map<EmailRecipientImpl, EmailService.MailType> emails = new HashMap<>();
+        for (User user : users) {
+            if (EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
+                int priorityNumber = getPrioityNumber(AppUtil.getMailType(user));
+                EmailRecipientImpl emailRecipientImpl = new EmailRecipientImpl(user.getEmail());
+                if (null == emails.get(emailRecipientImpl)) 
+                    emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                else {
+                    int currentPriorityNumber = getPrioityNumber(emails.get(emailRecipientImpl));
+                    if (priorityNumber > currentPriorityNumber)
+                        emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                }
+            }
+        }
+        assertTrue(users.size() > 0);
+        assertTrue(!emails.isEmpty());
     }
     
     /**
