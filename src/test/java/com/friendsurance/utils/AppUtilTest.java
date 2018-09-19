@@ -5,6 +5,8 @@
  */
 package com.friendsurance.utils;
 
+import com.friendsurance.backend.User;
+import com.friendsurance.mail.EmailService.MailType;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +38,7 @@ public class AppUtilTest {
     @Before
     public void setup() {
         invalidPropertyFileName = "/application.properties";
-        validPropertyFileName = "appliications.properties";
+        validPropertyFileName = "application.properties";
         validUsersFile = "users.csv";
         invalidUsersFile = "userszz.csv";
     }
@@ -63,7 +65,7 @@ public class AppUtilTest {
         Properties prop = new Properties();
         InputStream is = null;
         try {     
-            is = new FileInputStream("application.properties");
+            is = new FileInputStream(validPropertyFileName);
             // load properties 
             prop.load(is);
         } catch (IOException e) {
@@ -87,6 +89,25 @@ public class AppUtilTest {
     @Test
     public void whenReadFilesWithANonExistentFile_thenReturn() throws Exception {
         Path path = Paths.get(invalidUsersFile);
+        assertTrue(!Files.exists(path));
+    }
+    
+    /**
+     * Test valid users file
+     * @throws Exception 
+     */
+    @Test
+    public void whenReadFilesWithValidFile_thenReturn() throws Exception {
+        Path path = Paths.get(validUsersFile);
         assertTrue(Files.exists(path));
+    }
+    
+    /**
+     * Ensure that the right mail type is always returned
+     * @throws Exception 
+     */
+    @Test(expected = RuntimeException.class)
+    public void whenInvalidRule_thenThrowRuntimeException() throws Exception {
+        MailType mailType = AppUtil.getMailType(new User("zz@gmail.com", true, 4000, -1));
     }
 }
