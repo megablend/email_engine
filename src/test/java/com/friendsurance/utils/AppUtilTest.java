@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -109,5 +110,15 @@ public class AppUtilTest {
     @Test(expected = RuntimeException.class)
     public void whenInvalidRule_thenThrowRuntimeException() throws Exception {
         MailType mailType = AppUtil.getMailType(new User("zz@gmail.com", true, 4000, -1));
+    }
+    
+    /**
+     * Validate a valid rule
+     * @throws Exception 
+     */
+    @Test
+    public void whenValidRule_thenReturnMailType() throws Exception {
+        MailType mailType = AppUtil.getMailType(new User("zz@gmail.com", false, 0, 0));
+        assertEquals(MailType.MAIL_TYPE_2, mailType);
     }
 }
