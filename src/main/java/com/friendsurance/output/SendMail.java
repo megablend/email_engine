@@ -5,14 +5,10 @@
  */
 package com.friendsurance.output;
 
-import com.friendsurance.email.EmailConfig;
 import com.friendsurance.mail.EmailRecipientImpl;
 import com.friendsurance.mail.EmailService.MailType;
 import com.friendsurance.processing.ItemWriter;
-import com.friendsurance.processing.thread.ThreadService;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
 /**
