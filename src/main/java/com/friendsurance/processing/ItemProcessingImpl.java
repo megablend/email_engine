@@ -15,6 +15,7 @@ import com.friendsurance.utils.AppUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 /**
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailRecipientImpl, MailType>> {
     
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private AtomicInteger counter;
     
     public ItemProcessingImpl(FileReader reader, ItemWriter<Map<EmailRecipientImpl, MailType>> writer) {
         super(reader, writer);
@@ -37,18 +39,21 @@ public class ItemProcessingImpl extends ItemProcessing<List<User>, Map<EmailReci
     @Override
     protected Map<EmailRecipientImpl, MailType> process(List<User> users) {
         Map<EmailRecipientImpl, MailType> emails = new HashMap<>();
-        for (User user : users) {
-            if (EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
-                int priorityNumber = getPrioityNumber(AppUtil.getMailType(user));
-                EmailRecipientImpl emailRecipientImpl = new EmailRecipientImpl(user.getEmail());
-                if (null == emails.get(emailRecipientImpl)) 
-                    emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
-                else {
-                    int currentPriorityNumber = getPrioityNumber(emails.get(emailRecipientImpl));
-                    if (priorityNumber > currentPriorityNumber)
+        if (counter.get() == 0) { // I observed an anomaly in the abstract class ItemProcessing at line 35  where a loop was used to initialise the read value. For scenarios where it is not null, it will keep processing the input
+            for (User user : users) {
+                if (EMAIL_PATTERN.matcher(user.getEmail()).matches()) {
+                    int priorityNumber = getPrioityNumber(AppUtil.getMailType(user));
+                    EmailRecipientImpl emailRecipientImpl = new EmailRecipientImpl(user.getEmail());
+                    if (null == emails.get(emailRecipientImpl)) 
                         emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                    else {
+                        int currentPriorityNumber = getPrioityNumber(emails.get(emailRecipientImpl));
+                        if (priorityNumber > currentPriorityNumber)
+                            emails.put(emailRecipientImpl, AppUtil.getPriorityType(String.valueOf(priorityNumber)));
+                    }
                 }
             }
+            counter.incrementAndGet();
         }
         return emails;
     }
