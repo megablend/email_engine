@@ -8,9 +8,13 @@ package com.friendsurance.utils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +27,8 @@ import org.junit.rules.ExpectedException;
 public class AppUtilTest {
     private String invalidPropertyFileName;
     private String validPropertyFileName;
+    private String invalidUsersFile;
+    private String validUsersFile;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -31,6 +37,8 @@ public class AppUtilTest {
     public void setup() {
         invalidPropertyFileName = "/application.properties";
         validPropertyFileName = "appliications.properties";
+        validUsersFile = "users.csv";
+        invalidUsersFile = "userszz.csv";
     }
     
     /**
@@ -70,5 +78,15 @@ public class AppUtilTest {
             }
         }
         assertThat(prop.getProperty("users_file_name"), equalTo("users.csv"));
+    }
+    
+    /**
+     * Test invalid users file
+     * @throws Exception 
+     */
+    @Test
+    public void whenReadFilesWithANonExistentFile_thenReturn() throws Exception {
+        Path path = Paths.get(invalidUsersFile);
+        assertTrue(Files.exists(path));
     }
 }
