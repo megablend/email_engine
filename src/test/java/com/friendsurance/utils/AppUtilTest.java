@@ -133,8 +133,23 @@ public class AppUtilTest {
         assertEquals(MailType.MAIL_TYPE_2, mailType);
     }
     
+    /**
+     * Test invalid priorities
+     * @throws Exception 
+     */
     @Test(expected = RuntimeException.class)
     public void whenWrongPriority_throwException() throws Exception {
         MailType priority = AppUtil.getPriorityType("34");
     }
+    
+    /**
+     * Test valid priority
+     * @throws Exception 
+     */
+    @Test
+    public void whenValidPriority_thenReturnMailType() throws Exception {
+        MailType priority = AppUtil.getPriorityType("3");
+        assertEquals(MailType.MAIL_TYPE_3, priority);
+    }
+    
 }
