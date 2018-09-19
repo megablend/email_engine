@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -104,6 +105,16 @@ public class AppUtilTest {
     }
     
     /**
+     * Ensure that users collection is returned
+     * @throws Exception 
+     */
+    @Test
+    public void whenReadFile_thenReturnUsers() throws Exception {
+        List<User> users = AppUtil.readFile();
+        assertEquals(2, users.size());
+    }
+    
+    /**
      * Ensure that the right mail type is always returned
      * @throws Exception 
      */
@@ -120,5 +131,10 @@ public class AppUtilTest {
     public void whenValidRule_thenReturnMailType() throws Exception {
         MailType mailType = AppUtil.getMailType(new User("zz@gmail.com", false, 0, 0));
         assertEquals(MailType.MAIL_TYPE_2, mailType);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void whenWrongPriority_throwException() throws Exception {
+        MailType priority = AppUtil.getPriorityType("34");
     }
 }
