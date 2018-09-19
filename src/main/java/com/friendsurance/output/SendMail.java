@@ -5,9 +5,12 @@
  */
 package com.friendsurance.output;
 
+import com.friendsurance.email.EmailConfig;
 import com.friendsurance.mail.EmailRecipientImpl;
 import com.friendsurance.mail.EmailService.MailType;
 import com.friendsurance.processing.ItemWriter;
+import com.friendsurance.processing.thread.ThreadService;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
@@ -25,7 +28,17 @@ public class SendMail implements ItemWriter<Map<EmailRecipientImpl, MailType>> {
      */
     @Override
     public void write(Map<EmailRecipientImpl, MailType> users) {
-        
+        final Map<String, Integer> sentMails = new HashMap<>();
+        if (!users.isEmpty()) {
+            for (final Map.Entry<EmailRecipientImpl, MailType> user: users.entrySet()) {
+                if (null == sentMails.get(user.getKey().getEmail())) {
+                    EmailConfig ec = new EmailConfig();
+                    ec.sendMail(user.getKey(), user.getValue());
+                    sentMails.put(user.getKey().getEmail(), 1);
+                }
+            }
+            LOG.info("Mailing Processing Engine completed successfully");
+        }
     }
     
 }
