@@ -1,0 +1,4 @@
+2018-09-20 10:11:17 INFO  MailProcessingEngine:34 - Mail Processing Engine Started Successfully -- Let us catch the real action at 10:12:0 today :)
+2018-09-20 10:12:12 INFO  SendMail:46 - Mailing Processing Engine completed successfully
+2018-09-20 10:13:00 INFO  EmailConfig:79 - Email successfully sent to megablendjobs@gmail.com
+2018-09-20 10:13:00 INFO  EmailConfig:79 - Email successfully sent to megafu.charles@yahoo.com
